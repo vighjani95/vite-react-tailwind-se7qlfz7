@@ -281,60 +281,61 @@ function ContactSection() {
 }
 
 function MusicSection() {
-  const [formData, setFormData] = useState({ name: '', artist: '', song: '' })
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState('') // 🔴 Új: hibaüzenet
+  const [formData, setFormData] = useState({ name: '', artist: '', song: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = e => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-  }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = async e => {
-    e.preventDefault()
-    setError('') // előző hibaüzenet törlése
+    e.preventDefault();
+    setError('');
 
     if (formData.name && formData.artist && formData.song) {
       try {
-        // 1. Lekérjük az adatokat
         const res = await fetch(
-          'https://script.google.com/macros/s/AKfycbz8nRlsejxEWCaZwrms2QYF4jZzXi2d5PXmZrUIpnwgdGwKfWcLkn7a315Wz7BnZUdRTQ/exec'
-        )
-        const data = await res.json()
+          "https://script.google.com/macros/s/AKfycby0qO7qwvs8GzeXI8MLkWJDSJKvmM6JL8FcC0cDjXfTDVuaIWcYqDWmhPt8dk5X3qtpSg/exec"
+        );
+        const data = await res.json();
 
-        // 2. Duplikáció ellenőrzése
         const isDuplicate = data.some(
           entry =>
-            entry.artist?.toLowerCase() === formData.artist.toLowerCase() &&
-            entry.song?.toLowerCase() === formData.song.toLowerCase()
-        )
+            entry.artist?.toLowerCase().trim() === formData.artist.toLowerCase().trim() &&
+            entry.song?.toLowerCase().trim() === formData.song.toLowerCase().trim()
+        );
 
         if (isDuplicate) {
-          setError('Ez a kívánság már szerepel a listában!')
-          return
+          setError("Ez a dal már szerepel a kívánságlistán! 🎵 Kérlek válassz másikat.");
+          return;
         }
 
-        // 3. Mentés, ha nem duplikált
-        await fetch(
-          'https://script.google.com/macros/s/AKfycbz8nRlsejxEWCaZwrms2QYF4jZzXi2d5PXmZrUIpnwgdGwKfWcLkn7a315Wz7BnZUdRTQ/exec',
+        const saveRes = await fetch(
+          "https://script.google.com/macros/s/AKfycby0qO7qwvs8GzeXI8MLkWJDSJKvmM6JL8FcC0cDjXfTDVuaIWcYqDWmhPt8dk5X3qtpSg/exec",
           {
-            method: 'POST',
-            mode: 'no-cors',
+            method: "POST",
+            mode: "no-cors",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(formData),
           }
-        )
+        );
 
-        setFormData({ name: '', artist: '', song: '' })
-        setSubmitted(true)
-        setTimeout(() => setSubmitted(false), 3000)
+        const saveResult = await saveRes.text();
+        console.log("Mentés válasza:", saveResult);
+
+        setFormData({ name: '', artist: '', song: '' });
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 3000);
       } catch (err) {
-        console.error('Hiba a mentés vagy ellenőrzés során:', err)
+        console.error("Hiba a mentés során:", err);
+        setError("Hiba történt az adatok mentése közben.");
       }
     }
-  }
+  };
 
   return (
     <div className="relative w-full md:w-1/2 flex flex-col justify-start items-center bg-[#FFF0F5] p-10 animate-fade-in-up overflow-y-auto">
@@ -349,14 +350,12 @@ function MusicSection() {
           />
         </div>
 
-        {/* ✅ Sikeres beküldés */}
         {submitted && (
           <div className="mb-4 text-green-700 bg-green-100 border border-green-300 p-2 rounded text-center text-sm">
             Köszönjük! A kívánságot mentettük 🎉
           </div>
         )}
 
-        {/* 🔴 Hiba - Duplikáció */}
         {error && (
           <div className="mb-4 text-red-700 bg-red-100 border border-red-300 p-2 rounded text-center text-sm">
             {error}
@@ -366,77 +365,61 @@ function MusicSection() {
         <form onSubmit={handleSubmit} className="space-y-6 mt-10 text-left">
           <div>
             <label className="block text-sm font-medium text-gray-700">Neved</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-[#d2b48c] focus:border-[#d2b48c]"
-            />
+            <input type="text" name="name" value={formData.name} onChange={handleChange}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-[#d2b48c] focus:border-[#d2b48c]" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Előadó</label>
-            <input
-              type="text"
-              name="artist"
-              value={formData.artist}
-              onChange={handleChange}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-[#d2b48c] focus:border-[#d2b48c]"
-            />
+            <input type="text" name="artist" value={formData.artist} onChange={handleChange}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-[#d2b48c] focus:border-[#d2b48c]" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Dal címe</label>
-            <input
-              type="text"
-              name="song"
-              value={formData.song}
-              onChange={handleChange}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-[#d2b48c] focus:border-[#d2b48c]"
-            />
+            <input type="text" name="song" value={formData.song} onChange={handleChange}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-[#d2b48c] focus:border-[#d2b48c]" />
           </div>
           <div className="text-center">
-            <button
-              type="submit"
-              className="bg-[#9932cc] text-white px-6 py-2 rounded-full hover:bg-[#808080] transition"
-            >
+            <button type="submit"
+              className="bg-[#9932cc] text-white px-6 py-2 rounded-full hover:bg-[#808080] transition">
               Küldés 🎵
             </button>
           </div>
         </form>
+
         <AdminDownloadButton />
       </div>
     </div>
   )
 }
 
+
 function AdminDownloadButton() {
   const [loading, setLoading] = useState(false)
 
   const handleDownload = async () => {
-    const password = prompt('Kérlek add meg a letöltéshez szükséges kódot:')
-    if (password !== 'mesijani.DJ2025') {
-      alert('Hibás kód! A letöltés megszakítva.')
-      return
+    const code = prompt("Kérlek add meg az admin letöltési kódot:");
+    if (code !== "mesijani.DJ2025") {
+      alert("Hibás kód! Nincs jogosultság a letöltéshez.");
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(
-        'https://script.google.com/macros/s/AKfycbz8nRlsejxEWCaZwrms2QYF4jZzXi2d5PXmZrUIpnwgdGwKfWcLkn7a315Wz7BnZUdRTQ/exec'
-      )
-      const result = await response.json()
+      const response = await fetch("https://script.google.com/macros/s/AKfycby0qO7qwvs8GzeXI8MLkWJDSJKvmM6JL8FcC0cDjXfTDVuaIWcYqDWmhPt8dk5X3qtpSg/exec?code=" + code);
+      const result = await response.json();
 
       if (result.url) {
-        window.open(result.url, '_blank')
+        window.open(result.url, "_blank");
       } else {
-        alert('Nem sikerült a letöltési linket lekérni.')
+        alert("Nem sikerült a letöltési linket lekérni.");
       }
     } catch (error) {
-      console.error('Hiba a letöltés során:', error)
+      console.error("Hiba a letöltés során:", error);
+      alert("Hiba történt a letöltés közben.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="mt-6 text-center">
@@ -445,8 +428,8 @@ function AdminDownloadButton() {
         className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-700 transition"
         disabled={loading}
       >
-        {loading ? 'Letöltés...' : '🎧 Admin: Kívánságok letöltése'}
+        {loading ? "Letöltés..." : "🎧 Admin: Kívánságok letöltése"}
       </button>
     </div>
-  )
+  );
 }
