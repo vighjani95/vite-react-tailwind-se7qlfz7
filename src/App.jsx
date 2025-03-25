@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react"
+import GallerySection from './GallerySection.jsx'
 
 export default function App() {
   const [showRSVP, setShowRSVP] = useState(false)
@@ -14,6 +15,7 @@ export default function App() {
         setShowEvents={setShowEvents}
         setShowContact={setShowContact}
         setShowMusic={setShowMusic}
+        setShowGallery={setShowGallery}
       />
       {showRSVP ? (
         <RSVPSection />
@@ -23,13 +25,15 @@ export default function App() {
         <ContactSection />
       ) : showMusic ? (
         <MusicSection />
+      ) : showGallery ? (
+          <GallerySection />
       ) : (
         <HeroSection onRSVPClick={() => setShowRSVP(true)} />
       )}
     </div>
   )
 }
-function Sidebar({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
+function Sidebar({ setShowRSVP, setShowEvents, setShowContact, setShowMusic, setShowGallery }) {
   return (
     <div className="relative w-full md:w-1/2 h-[50vh] md:h-full">
       <div className="absolute inset-0 w-full h-full">
@@ -46,12 +50,13 @@ function Sidebar({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
         setShowEvents={setShowEvents}
         setShowContact={setShowContact}
         setShowMusic={setShowMusic}
+        setShowGallery={setShowGallery}
       />
     </div>
   )
 }
 
-function Menu({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
+function Menu({ setShowRSVP, setShowEvents, setShowContact, setShowMusic, setShowGallery }) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -72,6 +77,7 @@ function Menu({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
                 setShowRSVP(false)
                 setShowContact(false)
                 setShowMusic(false)
+                setShowGallery(false)
               }}
               className="flex items-center gap-2 text-white text-sm hover:text-lg hover:font-semibold hover:scale-105 hover:underline underline-offset-4 transform transition-all duration-300 ease-in-out"
             >
@@ -85,6 +91,7 @@ function Menu({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
                 setShowRSVP(false)
                 setShowContact(false)
                 setShowMusic(false)
+                setShowGallery(false)
               }}
               className="flex items-center gap-2 text-white text-sm hover:text-lg hover:font-semibold hover:scale-105 hover:underline underline-offset-4 transform transition-all duration-300 ease-in-out"
             >
@@ -98,6 +105,7 @@ function Menu({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
                 setShowRSVP(true)
                 setShowContact(false)
                 setShowMusic(false)
+                setShowGallery(false)
               }}
               className="flex items-center gap-2 text-white text-sm hover:text-lg hover:font-semibold hover:scale-105 hover:underline underline-offset-4 transform transition-all duration-300 ease-in-out"
             >
@@ -111,6 +119,7 @@ function Menu({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
                 setShowRSVP(false)
                 setShowContact(true)
                 setShowMusic(false)
+                setShowGallery(false)
               }}
               className="flex items-center gap-2 text-white text-sm hover:text-lg hover:font-semibold hover:scale-105 hover:underline underline-offset-4 transform transition-all duration-300 ease-in-out"
             >
@@ -123,7 +132,22 @@ function Menu({ setShowRSVP, setShowEvents, setShowContact, setShowMusic }) {
                 setShowEvents(false)
                 setShowRSVP(false)
                 setShowContact(false)
+                setShowMusic(false)
+                setShowGallery(true)
+              }}
+              className="flex items-center gap-2 text-white text-sm hover:text-base hover:font-semibold hover:scale-105 hover:underline underline-offset-4 transform transition-all duration-300 ease-in-out"
+            >
+              🖼️ Galéria
+            </button>
+          </li>
+          <li className="py-2">
+            <button
+              onClick={() => {
+                setShowEvents(false)
+                setShowRSVP(false)
+                setShowContact(false)
                 setShowMusic(true)
+                setShowGallery(false)
               }}
               className="flex items-center gap-2 text-white text-sm hover:text-base hover:font-semibold hover:scale-105 hover:underline underline-offset-4 transform transition-all duration-300 ease-in-out"
             >
@@ -434,3 +458,4 @@ function AdminDownloadButton() {
     </div>
   );
 }
+
