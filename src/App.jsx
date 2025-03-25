@@ -4,6 +4,7 @@ export default function App() {
   const [showRSVP, setShowRSVP] = useState(false)
   const [showEvents, setShowEvents] = useState(false)
   const [showContact, setShowContact] = useState(false)
+  const [showGallery, setShowGallery] = useState(false); // új
   const [showMusic, setShowMusic] = useState(false) // ← új
 
   return (
