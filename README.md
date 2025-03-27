@@ -1,1 +1,1 @@
-# Esküvői weboldal
+# Esküvői weboldal projekt
